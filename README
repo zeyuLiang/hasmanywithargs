@@ -1,0 +1,32 @@
+= HasManyWithArgs
+
+An association that returns records based on arguments.
+
+
+Usage:
+
+  class User
+    has_many_with_args :messages_from :user,
+      :class_name => 'Message',
+      :conditions => { :user_id => '#{user.id}' }
+  end
+
+Supports association extensions:
+
+  class User
+    has_many_with_args :messages_from :user,
+      :class_name => 'Message',
+      :conditions => { :user_id => '#{user.id}' } do
+
+      def recent(how_many)
+        find :all, :order => 'created_at DESC', :limit => how_many
+      end
+    end
+  end
+
+Users can now access their messages_from association with an argument.
+
+  account_owner = User.find(1)
+  viewer = User.find(2)
+
+  account_owner.messages_from(viewer)
